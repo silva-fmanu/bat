@@ -12,7 +12,6 @@ public class Main {
         System.out.print("Coluna:");
         String coluna=ler.next().toLowerCase();
 
-        marcarNaMatriz(linha,coluna);
 
         System.out.println(linha);
         System.out.println(coluna);
