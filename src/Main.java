@@ -17,11 +17,6 @@ public class Main {
         System.out.println(linha);
         System.out.println(coluna);
     }
-    static void marcarNaMatriz(int lin, String col){
-        for (int i=0;i<10;i++){
-
-        }
-    }
 
     static void mostraTabuleiro(String[][]campo){
         System.out.println("|||A| B| C| D| E| F| G| H| I| J| K|");
