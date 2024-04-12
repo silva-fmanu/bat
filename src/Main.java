@@ -14,7 +14,7 @@ public class Main {
         boolean multiplayer = false;
 
         for(int i = 0; i == 0;) {
-            System.out.print("m -> multiplayer\ns -> singleplayer(contra máquina)\n\nDigite a sua opção: ");
+            System.out.print("Você deseja jogar:\nm -> multiplayer\ns -> singleplayer(contra máquina)\n\nDigite a sua opção: ");
             char opMultiplayer = ler.next().toLowerCase().charAt(0);
 
             if (opMultiplayer == 'm') {
@@ -31,7 +31,7 @@ public class Main {
         boolean automatico = false;
 
         for(int i = 0; i == 0;) {
-            System.out.print("\na -> automatico\nm -> manual\n\nDigite a sua opção: ");
+            System.out.print("\nDe que modo você deseja alocar os barcos:\na -> automatico\nm -> manual\n\nDigite a sua opção: ");
             char opMultiplayer = ler.next().toLowerCase().charAt(0);
 
             if (opMultiplayer == 'a') {
@@ -47,19 +47,35 @@ public class Main {
 
         boolean dificil = false;
 
-        for(int i = 0; i == 0;) {
-            System.out.print("\nf -> facil\nd -> dificil\n\nDigite a sua opção: ");
-            char opMultiplayer = ler.next().toLowerCase().charAt(0);
+        if(!multiplayer){
+            for(int i = 0; i == 0;) {
+                System.out.print("\nQual dificuldade de jogo você deseja:\nf -> facil\nd -> dificil\n\nDigite a sua opção: ");
+                char opMultiplayer = ler.next().toLowerCase().charAt(0);
 
-            if (opMultiplayer == 'd') {
-                dificil = true;
-                i++;
-            } else if (opMultiplayer == 'f') {
-                dificil = false;
-                i++;
-            } else {
-                System.out.println("Opção inválida, tente novamente.\n");
+                if (opMultiplayer == 'd') {
+                    dificil = true;
+                    i++;
+                } else if (opMultiplayer == 'f') {
+                    dificil = false;
+                    i++;
+                } else {
+                    System.out.println("Opção inválida, tente novamente.\n");
+                }
             }
+        }
+
+        if(automatico){
+            //faz automático
+        }else{
+            mostraTabuleiro(campoJogador);
+            System.out.print("1x Barco grande (4 espaços):\nh - horizontal\nv - vertical\nOpção: ");
+            char opDirecao = ler.next().toLowerCase().charAt(0);
+            System.out.print("Linha: ");
+            int linha=ler.nextInt();
+            System.out.print("Coluna: ");
+            char coluna= ler.next().toLowerCase().charAt(0);
+            int numColuna = pegarNumero(coluna);
+            //checarLivre(linha, numColuna, opDirecao, campoJogador, 4);
         }
 
         System.out.println("\nMultiplayer = "+multiplayer+"\nAutomático = "+automatico+"\nDifícil = "+dificil);
@@ -108,4 +124,12 @@ public class Main {
 
         return num;
     }
+
+    /*
+    static boolean checarLivre(int linha, int coluna, char direcao, String[][] campo, int tamanho){
+        if (direcao == 'h'){
+
+        }
+    }
+     */
 }
