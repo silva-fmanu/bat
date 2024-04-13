@@ -90,6 +90,7 @@ public class Main {
         char coluna= ler.next().toLowerCase().charAt(0);
         int numColuna = pegarNumero(coluna);
 
+
        //if(chegarLivre(...)===true){
         System.out.println(linha);
         System.out.println(coluna);
@@ -152,4 +153,6 @@ public class Main {
 
         return true;
     }
+
+
 }
