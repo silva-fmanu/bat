@@ -85,6 +85,23 @@ public class Main {
                     System.out.println("não ta livre, tenta de novo");
                 }
             }
+            for (int i = 2; i != 0;){
+                mostraTabuleiro(campoJogador);
+                System.out.print(i+"x Barco grande (3 espaços):\nh - horizontal\nv - vertical\nOpção: ");
+                char opDirecao = ler.next().toLowerCase().charAt(0);
+                System.out.print("Linha: ");
+                int linha=ler.nextInt();
+                System.out.print("Coluna: ");
+                char coluna= ler.next().toLowerCase().charAt(0);
+                int numColuna = pegarNumero(coluna);
+                if(checarLivre(linha, numColuna, opDirecao, campoJogador, 3)){
+                    System.out.println("ta livre");
+                    campoJogador = alocarBarco(linha, numColuna, opDirecao, campoJogador, 3);
+                    i--;
+                }else{
+                    System.out.println("não ta livre, tenta de novo");
+                }
+            }
         }
 
         //System.out.println("\nMultiplayer = "+multiplayer+"\nAutomático = "+automatico+"\nDifícil = "+dificil);
@@ -164,12 +181,12 @@ public class Main {
 
     static String[][] alocarBarco(int linha, int coluna, char direcao, String[][] campo, int tamanho){
         if (direcao == 'h'){
-            for (int i = linha;i<linha+tamanho;i++){
+            for (int i = coluna;i<coluna+tamanho;i++){
                 campo[linha][i] = "⛵";
             }
             return campo;
         }else{
-            for (int i = coluna;i<coluna+tamanho;i++){
+            for (int i = linha;i<linha+tamanho;i++){
                 campo[i][coluna] = "⛵";
             }
             return campo;
