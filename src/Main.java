@@ -158,8 +158,8 @@ public class Main {
                 return false;
             }
 
-            for (int i=linha;i<linha+tamanho;i++){ //checa se o espaço que o barco vai ficar é água
-                if(!campo[i][coluna].equals("♒")){
+            for (int i=coluna;i<coluna+tamanho;i++){ //checa se o espaço que o barco vai ficar é água
+                if(!campo[linha][i].equals("♒")){
                     return false; //pq daí se for diferente quer dizer que ja esta ocupado
                 }
             }
@@ -170,7 +170,7 @@ public class Main {
             }
 
             for (int i=linha;i<linha+tamanho;i++){ //checa pra ver se é tudo água
-                if(!campo[linha][i].equals("♒")){
+                if(!campo[i][coluna].equals("♒")){
                     return false;
                 }
             }
