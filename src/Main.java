@@ -16,12 +16,12 @@ public class Main {
 
         for(int i = 0; i == 0;) {
             System.out.print("Você deseja jogar:\nm -> multiplayer\ns -> singleplayer(contra máquina)\n\nDigite a sua opção: ");
-            char opMultiplayer = ler.next().toLowerCase().charAt(0);
+            char op = ler.next().toLowerCase().charAt(0);
 
-            if (opMultiplayer == 'm') {
+            if (op == 'm') {
                 multiplayer = true;
                 i++;
-            } else if (opMultiplayer == 's') {
+            } else if (op == 's') {
                 multiplayer = false;
                 i++;
             } else {
@@ -33,12 +33,12 @@ public class Main {
 
         for(int i = 0; i == 0;) {
             System.out.print("\nDe que modo você deseja alocar os barcos:\na -> automatico\nm -> manual\n\nDigite a sua opção: ");
-            char opMultiplayer = ler.next().toLowerCase().charAt(0);
+            char op = ler.next().toLowerCase().charAt(0);
 
-            if (opMultiplayer == 'a') {
+            if (op == 'a') {
                 automatico = true;
                 i++;
-            } else if (opMultiplayer == 'm') {
+            } else if (op == 'm') {
                 automatico = false;
                 i++;
             } else {
@@ -51,12 +51,12 @@ public class Main {
         if(!multiplayer){
             for(int i = 0; i == 0;) {
                 System.out.print("\nQual dificuldade de jogo você deseja:\nf -> facil\nd -> dificil\n\nDigite a sua opção: ");
-                char opMultiplayer = ler.next().toLowerCase().charAt(0);
+                char op = ler.next().toLowerCase().charAt(0);
 
-                if (opMultiplayer == 'd') {
+                if (op == 'd') {
                     dificil = true;
                     i++;
-                } else if (opMultiplayer == 'f') {
+                } else if (op == 'f') {
                     dificil = false;
                     i++;
                 } else {
@@ -68,18 +68,26 @@ public class Main {
         if(automatico){
             //faz automático
         }else{
-            mostraTabuleiro(campoJogador);
-            System.out.print("1x Barco grande (4 espaços):\nh - horizontal\nv - vertical\nOpção: ");
-            char opDirecao = ler.next().toLowerCase().charAt(0);
-            System.out.print("Linha: ");
-            int linha=ler.nextInt();
-            System.out.print("Coluna: ");
-            char coluna= ler.next().toLowerCase().charAt(0);
-            int numColuna = pegarNumero(coluna);
-            //checarLivre(linha, numColuna, opDirecao, campoJogador, 4);
+            for (int i = 1; i != 0;){
+                mostraTabuleiro(campoJogador);
+                System.out.print(i+"x Barco grande (4 espaços):\nh - horizontal\nv - vertical\nOpção: ");
+                char opDirecao = ler.next().toLowerCase().charAt(0);
+                System.out.print("Linha: ");
+                int linha=ler.nextInt();
+                System.out.print("Coluna: ");
+                char coluna= ler.next().toLowerCase().charAt(0);
+                int numColuna = pegarNumero(coluna);
+                if(checarLivre(linha, numColuna, opDirecao, campoJogador, 4)){
+                    System.out.println("ta livre");
+                    campoJogador = alocarBarco(linha, numColuna, opDirecao, campoJogador, 4);
+                    i--;
+                }else{
+                    System.out.println("não ta livre, tenta de novo");
+                }
+            }
         }
 
-        System.out.println("\nMultiplayer = "+multiplayer+"\nAutomático = "+automatico+"\nDifícil = "+dificil);
+        //System.out.println("\nMultiplayer = "+multiplayer+"\nAutomático = "+automatico+"\nDifícil = "+dificil);
 
         System.out.println();
         mostraTabuleiro(campoJogador);
@@ -126,33 +134,46 @@ public class Main {
 
         return num;
     }
+
     static boolean checarLivre(int linha, int coluna, char direcao, String[][] campo, int tamanho){
         if (direcao == 'h'){
-            if(coluna+direcao >campo[0].length){
+            if(coluna+tamanho>campo[0].length){ //checa pra ver se não passa pra fora do campo
                 return false;
             }
 
-            for (int i=coluna;i<coluna+tamanho;i++){
-                if(!campo[i].equals("♒")){
+            for (int i=linha;i<linha+tamanho;i++){ //checa se o espaço que o barco vai ficar é água
+                if(!campo[i][coluna].equals("♒")){
                     return false; //pq daí se for diferente quer dizer que ja esta ocupado
                 }
             }
         }
         else{ //se não for  h vai ser v
-            if(linha+tamanho>campo.length){
+            if(linha+tamanho>campo.length){ //checar pra ver se não passa pra fora do campo, mas agora na vertical
                 return false;
             }
 
-            for (int i=coluna;i<coluna+tamanho;i++){
-
-                if(!campo[i].equals("♒")){
+            for (int i=linha;i<linha+tamanho;i++){ //checa pra ver se é tudo água
+                if(!campo[linha][i].equals("♒")){
                     return false;
                 }
             }
         }
 
-        return true;
+        return true; // se tiver tudo livre, retorna como verdade, ou seja, é tudo água então pode colocar o barquinho
     }
 
+    static String[][] alocarBarco(int linha, int coluna, char direcao, String[][] campo, int tamanho){
+        if (direcao == 'h'){
+            for (int i = linha;i<linha+tamanho;i++){
+                campo[linha][i] = "⛵";
+            }
+            return campo;
+        }else{
+            for (int i = coluna;i<coluna+tamanho;i++){
+                campo[i][coluna] = "⛵";
+            }
+            return campo;
+        }
+    }
 
 }
