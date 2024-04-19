@@ -3,6 +3,7 @@ import java.util.Random;
 import java.util.Scanner;
 
 public class Main {
+
     public static void main(String[] args) {
         Scanner ler=new Scanner(System.in);
 
@@ -103,8 +104,8 @@ public class Main {
             }
         }
 
+        boolean ganhou = false;
         if (multiplayer){
-            boolean ganhou = false;
             do{
                 System.out.println("\nAtaque do Jogador:");
                 mostraTabuleiro(campoAtaqueAdversario);
@@ -167,7 +168,54 @@ public class Main {
                 }
             }while(!ganhou);
         }else{
-            //singleplayer
+            do {
+                System.out.println("\nJogador ataca:");
+                System.out.println("Campo Adversário:");
+                mostraTabuleiro(campoAtaqueAdversario);
+                System.out.println("Faça o ataque:");
+                int barcosAdversarios = 20;
+                int linha = 0;
+                int coluna = 0;
+                for (int i = 0; i==0;) {
+                    System.out.print("\nLinha: ");
+                    linha = ler.nextInt();
+                    if (linha >=0 && linha<=9) { // tem que ajustar isso aqui para não acitar char, pq se eu coloco char da erro
+                        i++;
+                    } else {
+                        System.out.println("Opção inválida.");
+                    }
+                }
+                for (int i = 0; i==0;) {
+                    System.out.print("\nColuna: ");
+                    char charColuna = ler.next().toLowerCase().charAt(0);
+                    coluna = pegarNumero(charColuna);
+                    if (coluna >=0 && coluna<=9) {
+                        i++;
+                    } else {
+                        System.out.println("Opção inválida.");
+                    }
+                }
+                campoAtaqueAdversario = ataque(linha, coluna, campoAdversario, campoAtaqueAdversario, barcosAdversarios);
+                mostraTabuleiro(campoAtaqueAdversario);
+
+                if (barcosAdversarios == 0){
+                    ganhou = true;
+                }
+
+                System.out.println("\nAtaque da Máquina:");
+                autoAlocar(campoAdversario, tamanhos);
+                int barcosJogador = 20;
+                Random gerar= new Random();
+                linha= gerar.nextInt(0, 9);
+                coluna= gerar.nextInt(0, 9);
+                campoAtaqueJogador=ataque(linha, coluna, campoJogador, campoAtaqueJogador, barcosJogador);
+                mostraTabuleiro(campoAtaqueJogador);
+
+                if (barcosJogador == 0){
+                    ganhou = true;
+                }
+
+            }while(!ganhou);
         }
 
     }
@@ -202,13 +250,13 @@ public class Main {
 
     static boolean checarLivre(int linha, int coluna, char direcao, String[][] campo, int tamanho){
         if (direcao == 'h'){
-            if(coluna+tamanho>campo[0].length){ //checa pra ver se não passa pra fora do campo
+            if(coluna+tamanho>campo[0].length){
                 return false;
             }
 
-            for (int i=coluna;i<coluna+tamanho;i++){ //checa se o espaço que o barco vai ficar é água
+            for (int i=coluna;i<coluna+tamanho;i++){
                 if(!campo[linha][i].equals("♒")){
-                    return false; //pq daí se for diferente quer dizer que ja esta ocupado
+                    return false;
                 }
             }
         }
@@ -287,7 +335,7 @@ public class Main {
                     campo = alocarBarco(linha, numColuna, opDirecao, campo, tamanhos[i]);
                     j--;
                 }else{
-                    System.out.println("não ta livre, tenta de novo");
+                    System.out.println("não ta livre, tente de novo");
                 }
             }
         }
@@ -303,13 +351,18 @@ public class Main {
         return campo;
     }
 
-    static String[][] ataque(int linha, int coluna, String[][] campoReferencia, String[][] campoMostra) {
+    static String[][] ataque(int linha, int coluna, String[][] campoReferencia, String[][] campoMostra, int barcos) {
+
         if (campoReferencia[linha][coluna].equals("⛵")){
             campoMostra[linha][coluna] = "⛵";
+            barcos--;
         }else{
             campoMostra[linha][coluna] = "💣";
         }
         return campoMostra;
     }
+
+
+
 
 }
