@@ -105,39 +105,20 @@ public class Main {
         }
 
         boolean ganhou = false;
+
         if (multiplayer){
             do{
                 System.out.println("\nAtaque do Jogador:");
                 mostraTabuleiro(campoAtaqueAdversario);
                 int barcosAdversarios = 20;
-                int linha = 0;
-                int coluna = 0;
-                for (int i = 0; i==0;) {
-                    System.out.print("\nLinha: ");
-                    linha = ler.nextInt();
-                    if (linha >=0 && linha<=9) {
-                        i++;
-                    }else {
-                        System.out.println("Opção inválida.");
-                    }
-                }
-                for (int i = 0; i==0;) {
-                    System.out.print("\nColuna: ");
-                    char charColuna = ler.next().toLowerCase().charAt(0);
-                    coluna = pegarNumero(charColuna);
-                    if (coluna >=0 && coluna<=9) {
-                        i++;
-                    }else {
-                        System.out.println("Opção inválida.");
-                    }
-                }
-                campoAtaqueAdversario = ataque(linha, coluna, campoAdversario, campoAtaqueAdversario, barcosAdversarios);
+                int[] cordenadas = cordenadas();
+                campoAtaqueAdversario = ataque(cordenadas[0], cordenadas[1], campoAdversario, campoAtaqueAdversario, barcosAdversarios);
                 mostraTabuleiro(campoAtaqueAdversario);
 
                 if (barcosAdversarios == 0){
                     ganhou=true;
                 }
-
+                /*
                 System.out.println("\nAtaque do Adversário:");
                 mostraTabuleiro(campoAtaqueJogador);
                 int barcosJogador = 20;
@@ -166,6 +147,7 @@ public class Main {
                 if (barcosJogador==0){
                     ganhou = true;
                 }
+                */
             }while(!ganhou);
         }else{
             do {
@@ -232,8 +214,9 @@ public class Main {
     }
 
     static int pegarNumero(char op){
-        int num = 0;
+        int num;
         switch(op){
+            case 'a' -> num=0;
             case 'b' -> num=1;
             case 'c' -> num=2;
             case 'd' -> num=3;
@@ -243,6 +226,7 @@ public class Main {
             case 'h' -> num=7;
             case 'i' -> num=8;
             case 'j' -> num=9;
+            default -> num=10;
         }
 
         return num;
@@ -362,6 +346,52 @@ public class Main {
         return campoMostra;
     }
 
+    static int[] cordenadas(){
+        Scanner ler = new Scanner(System.in);
+
+        int[] cordenadas = new int[2];
+
+        System.out.println("Faça o ataque:");
+
+        for (int i = 0; i==0;) {
+            for (int j = 0; j == 0;){
+                System.out.print("\nLinha: ");
+                if (ler.hasNextInt()){
+                    cordenadas[0] = ler.nextInt();
+                    j++;
+                } else {
+                    System.out.println("Não é um número!");
+                    ler.next();
+                }
+            }
+
+            if (cordenadas[0] >=0 && cordenadas[0]<=9) {
+                i++;
+            } else {
+                System.out.println("Opção inválida.");
+            }
+        }
+
+
+        for (int i = 0; i==0;) {
+            System.out.print("\nColuna: ");
+            if (ler.hasNextInt()){
+                System.out.println("Não é letra!");
+                ler.nextInt();
+            } else {
+                //str.lenght <- checar o tamanho da string pra ver se contém só um char :D
+                int coluna = pegarNumero(ler.next().toLowerCase().charAt(0));
+                if (coluna>=0 && coluna<=9 ) {
+                    cordenadas[1] = coluna;
+                    i++;
+                } else {
+                    System.out.println("Opção inválida.");
+                }
+            }
+        }
+
+        return cordenadas;
+    }
 
 
 
