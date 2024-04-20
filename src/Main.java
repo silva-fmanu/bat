@@ -1,4 +1,3 @@
-import javax.sound.midi.MidiFileFormat;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -10,8 +9,8 @@ public class Main {
         String[][] campoJogador= criarCampo();
         String[][] campoAdversario= criarCampo();
 
-        String[][] campoAtaqueJogador = criarCampo();
-        String[][] campoAtaqueAdversario = criarCampo();
+        String[][] campoAtacarJogador = criarCampo();
+        String[][] campoAtacarAdversario = criarCampo();
 
 
         boolean multiplayer = false;
@@ -107,53 +106,54 @@ public class Main {
         boolean ganhou = false;
 
         if (multiplayer){
+            int barcosAdversarios = 20;
+            int barcosJogador = 20;
+
             do{
                 System.out.println("\nAtaque do Jogador:");
-                mostraTabuleiro(campoAtaqueAdversario);
-                int barcosAdversarios = 20;
+
+                mostraTabuleiro(campoAtacarAdversario);
+                System.out.println("♒ = água | 💣 = errou um barco | ⛵ = acertou um barco | "+barcosAdversarios+" = barcos restantes");
+
+                System.out.println("Faça o ataque:");
                 int[] cordenadas = cordenadas();
-                campoAtaqueAdversario = ataque(cordenadas[0], cordenadas[1], campoAdversario, campoAtaqueAdversario, barcosAdversarios);
-                mostraTabuleiro(campoAtaqueAdversario);
+                campoAtacarAdversario = ataque(cordenadas[0], cordenadas[1], campoAdversario, campoAtacarAdversario);
+
+                mostraTabuleiro(campoAtacarAdversario);
+                if (acertou(cordenadas[0], cordenadas[1], campoAdversario)){
+                    barcosAdversarios--;
+                }
+                System.out.println("♒ = água | 💣 = errou um barco | ⛵ = acertou um barco | "+barcosAdversarios+" = barcos restantes");
 
                 if (barcosAdversarios == 0){
-                    ganhou=true;
+                    ganhou = true;
+                    break;
                 }
-                /*
-                System.out.println("\nAtaque do Adversário:");
-                mostraTabuleiro(campoAtaqueJogador);
-                int barcosJogador = 20;
-                for (int i = 0; i==0;) {
-                    System.out.print("\nLinha: ");
-                    linha = ler.nextInt();
-                    if (linha >=0 && linha<=9) {
-                        i++;
-                    }else {
-                        System.out.println("Opção inválida.");
-                    }
-                }
-                for (int i = 0; i==0;) {
-                    System.out.print("\nColuna: ");
-                    char charColuna = ler.next().toLowerCase().charAt(0);
-                    coluna = pegarNumero(charColuna);
-                    if (coluna >=0 && coluna<=9) {
-                        i++;
-                    }else {
-                        System.out.println("Opção inválida.");
-                    }
-                }
-                campoAtaqueJogador = ataque(linha, coluna, campoJogador, campoAtaqueJogador, barcosJogador);
-                mostraTabuleiro(campoAtaqueJogador);
 
-                if (barcosJogador==0){
+                System.out.println("\nAtaque do Adversário:");
+
+                mostraTabuleiro(campoAtacarJogador);
+                System.out.println("♒ = água | 💣 = errou um barco | ⛵ = acertou um barco | "+barcosJogador+" = barcos restantes");
+
+                System.out.println("Faça o ataque:");
+                cordenadas = cordenadas();
+                campoAtacarJogador = ataque(cordenadas[0], cordenadas[1], campoJogador, campoAtacarJogador);
+
+                mostraTabuleiro(campoAtacarJogador);
+                if (acertou(cordenadas[0], cordenadas[1], campoJogador)){
+                    barcosJogador--;
+                }
+                System.out.println("♒ = água | 💣 = errou um barco | ⛵ = acertou um barco | "+barcosJogador+" = barcos restantes");
+
+                if (barcosJogador == 0){
                     ganhou = true;
                 }
-                */
             }while(!ganhou);
         }else{
             do {
                 System.out.println("\nJogador ataca:");
                 System.out.println("Campo Adversário:");
-                mostraTabuleiro(campoAtaqueAdversario);
+                mostraTabuleiro(campoAtacarAdversario);
                 System.out.println("Faça o ataque:");
                 int barcosAdversarios = 20;
                 int linha = 0;
@@ -177,8 +177,8 @@ public class Main {
                         System.out.println("Opção inválida.");
                     }
                 }
-                campoAtaqueAdversario = ataque(linha, coluna, campoAdversario, campoAtaqueAdversario, barcosAdversarios);
-                mostraTabuleiro(campoAtaqueAdversario);
+                campoAtacarAdversario = ataque(linha, coluna, campoAdversario, campoAtacarAdversario);
+                mostraTabuleiro(campoAtacarAdversario);
 
                 if (barcosAdversarios == 0){
                     ganhou = true;
@@ -190,8 +190,8 @@ public class Main {
                 Random gerar= new Random();
                 linha= gerar.nextInt(0, 9);
                 coluna= gerar.nextInt(0, 9);
-                campoAtaqueJogador=ataque(linha, coluna, campoJogador, campoAtaqueJogador, barcosJogador);
-                mostraTabuleiro(campoAtaqueJogador);
+                campoAtacarJogador =ataque(linha, coluna, campoJogador, campoAtacarJogador);
+                mostraTabuleiro(campoAtacarJogador);
 
                 if (barcosJogador == 0){
                     ganhou = true;
@@ -308,15 +308,30 @@ public class Main {
             for (int j = i; j >= 0;){
                 mostraTabuleiro(campo);
                 System.out.print((j+1)+"x Barco grande ("+tamanhos[i]+" espaços):\nh - horizontal\nv - vertical\nOpção: ");
-                char opDirecao = ler.next().toLowerCase().charAt(0);
-                System.out.print("Linha: ");
-                int linha=ler.nextInt();
-                System.out.print("Coluna: ");
-                char coluna= ler.next().toLowerCase().charAt(0);
-                int numColuna = pegarNumero(coluna);
-                if(checarLivre(linha, numColuna, opDirecao, campo, tamanhos[i])){
+                char opDirecao = 'a';
+                for (int a = 0; a == 0 ; ) {
+                    if (ler.hasNextInt()){
+                        System.out.println("Não é letra!");
+                        ler.nextInt();
+                    } else {
+                        String op = ler.next();
+                        if (op.length() == 1){
+                            opDirecao = op.toLowerCase().charAt(0);
+                            if (opDirecao == 'h' || opDirecao == 'v') {
+                                a++;
+                            } else {
+                                System.out.println("Opção inválida.");
+                            }
+                        }else{
+                            System.out.println("Opção inválida.");
+                        }
+                    }
+                }
+
+                int[] cordenadas = cordenadas();
+                if(checarLivre(cordenadas[0], cordenadas[1], opDirecao, campo, tamanhos[i])){
                     System.out.println("ta livre");
-                    campo = alocarBarco(linha, numColuna, opDirecao, campo, tamanhos[i]);
+                    campo = alocarBarco(cordenadas[0], cordenadas[1], opDirecao, campo, tamanhos[i]);
                     j--;
                 }else{
                     System.out.println("não ta livre, tente de novo");
@@ -335,11 +350,9 @@ public class Main {
         return campo;
     }
 
-    static String[][] ataque(int linha, int coluna, String[][] campoReferencia, String[][] campoMostra, int barcos) {
-
+    static String[][] ataque(int linha, int coluna, String[][] campoReferencia, String[][] campoMostra) {
         if (campoReferencia[linha][coluna].equals("⛵")){
             campoMostra[linha][coluna] = "⛵";
-            barcos--;
         }else{
             campoMostra[linha][coluna] = "💣";
         }
@@ -350,8 +363,6 @@ public class Main {
         Scanner ler = new Scanner(System.in);
 
         int[] cordenadas = new int[2];
-
-        System.out.println("Faça o ataque:");
 
         for (int i = 0; i==0;) {
             for (int j = 0; j == 0;){
@@ -379,18 +390,31 @@ public class Main {
                 System.out.println("Não é letra!");
                 ler.nextInt();
             } else {
-                //str.lenght <- checar o tamanho da string pra ver se contém só um char :D
-                int coluna = pegarNumero(ler.next().toLowerCase().charAt(0));
-                if (coluna>=0 && coluna<=9 ) {
-                    cordenadas[1] = coluna;
-                    i++;
-                } else {
+                String charColuna = ler.next();
+                if (charColuna.length() == 1){
+                    int coluna = pegarNumero(charColuna.toLowerCase().charAt(0));
+                    if (coluna != 10) {
+                        cordenadas[1] = coluna;
+                        i++;
+                    } else {
+                        System.out.println("Opção inválida.");
+                    }
+                }else{
                     System.out.println("Opção inválida.");
                 }
+
             }
         }
 
         return cordenadas;
+    }
+
+    static boolean acertou(int linha, int coluna, String[][] campo){
+        boolean acertou = false;
+        if(campo[linha][coluna].equals("⛵")){
+            acertou = true;
+        }
+        return acertou;
     }
 
 
