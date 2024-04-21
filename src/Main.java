@@ -70,7 +70,7 @@ public class Main {
 
         if(automatico){
             autoAlocar(campoJogador, tamanhos);
-            System.out.println("Tabuleiro do Jogador:");
+            System.out.println("\nTabuleiro do Jogador:");
             mostraTabuleiro(campoJogador);
         }else{
             manualAlocar(campoJogador, tamanhos);
@@ -103,101 +103,133 @@ public class Main {
             }
         }
 
-        boolean ganhou = false;
+        int ganhou = 0;
+        int barcosAdversarios = 20;
+        int barcosJogador = 20;
 
         if (multiplayer){
-            int barcosAdversarios = 20;
-            int barcosJogador = 20;
-
             do{
+                mostraTabuleiro(campoAtacarAdversario);
+                System.out.println("♒ = água | 💣 = errou um barco | ⛵ = acertou um barco | "+barcosAdversarios+" = barcos restantes");
                 System.out.println("\nAtaque do Jogador:");
 
-                mostraTabuleiro(campoAtacarAdversario);
-                System.out.println("♒ = água | 💣 = errou um barco | ⛵ = acertou um barco | "+barcosAdversarios+" = barcos restantes");
-
-                System.out.println("Faça o ataque:");
-                int[] cordenadas = cordenadas();
-                campoAtacarAdversario = ataque(cordenadas[0], cordenadas[1], campoAdversario, campoAtacarAdversario);
-
-                mostraTabuleiro(campoAtacarAdversario);
-                if (acertou(cordenadas[0], cordenadas[1], campoAdversario)){
-                    barcosAdversarios--;
+                //esse for é pra ter certeza que o jogador vai tentar acertar um lugar que ainda não foi tentado
+                for (int i = 0 ; i == 0 ;){
+                    System.out.println("Faça o ataque:");
+                    int[] cordenadas = cordenadas();
+                    if(checarLivre(cordenadas[0], cordenadas[1], 'h', campoAtacarAdversario, 1)){//checa pra ver se o jogador já acertou esse lugar
+                        campoAtacarAdversario = ataque(cordenadas[0], cordenadas[1], campoAdversario, campoAtacarAdversario);
+                        if (acertou(cordenadas[0], cordenadas[1], campoAdversario)){
+                            barcosAdversarios--;
+                        }
+                        i++;
+                    }else{
+                        System.out.print("\nVocê já tentou acertar esse lugar! Tente outra posição.");
+                    }
                 }
-                System.out.println("♒ = água | 💣 = errou um barco | ⛵ = acertou um barco | "+barcosAdversarios+" = barcos restantes");
 
                 if (barcosAdversarios == 0){
-                    ganhou = true;
+                    ganhou = 1;
                     break;
                 }
+                mostraTabuleiro(campoAtacarAdversario);
+                System.out.println("♒ = água | 💣 = errou um barco | ⛵ = acertou um barco | "+barcosAdversarios+" = barcos restantes");
+
+
 
                 System.out.println("\nAtaque do Adversário:");
 
                 mostraTabuleiro(campoAtacarJogador);
                 System.out.println("♒ = água | 💣 = errou um barco | ⛵ = acertou um barco | "+barcosJogador+" = barcos restantes");
 
-                System.out.println("Faça o ataque:");
-                cordenadas = cordenadas();
-                campoAtacarJogador = ataque(cordenadas[0], cordenadas[1], campoJogador, campoAtacarJogador);
+                //esse for é pra ter certeza que o jogador vai tentar acertar um lugar que ainda não foi tentado
+                for (int i = 0 ; i == 0 ;){
+                    System.out.println("Faça o ataque:");
+                    int[] cordenadas = cordenadas();
+
+                    if (checarLivre(cordenadas[0], cordenadas[1], 'h', campoAtacarJogador, 1)){//checa pra ver se o jogador já acertou esse lugar
+                        campoAtacarJogador = ataque(cordenadas[0], cordenadas[1], campoJogador, campoAtacarJogador);
+                        if (acertou(cordenadas[0], cordenadas[1], campoJogador)){
+                            barcosJogador--;
+                        }
+                        i++;
+                    }else{
+                        System.out.println("Você já tentou acertar esse lugar! Tente outra posição.");
+                    }
+                }
+
+                if (barcosJogador == 0){
+                    ganhou = 2;
+                    break;
+                }
 
                 mostraTabuleiro(campoAtacarJogador);
-                if (acertou(cordenadas[0], cordenadas[1], campoJogador)){
-                    barcosJogador--;
-                }
                 System.out.println("♒ = água | 💣 = errou um barco | ⛵ = acertou um barco | "+barcosJogador+" = barcos restantes");
 
-                if (barcosJogador == 0){
-                    ganhou = true;
-                }
-            }while(!ganhou);
+
+            }while(ganhou == 0);
+        }
+        else{
+            Random gerar= new Random();
+            autoAlocar(campoAdversario, tamanhos);
+            if (!dificil){
+                do {
+                    System.out.println("\nCampo Adversário:");
+                    mostraTabuleiro(campoAtacarAdversario);
+                    System.out.println("♒ = água | 💣 = errou um barco | ⛵ = acertou um barco | "+barcosAdversarios+" = barcos restantes");
+                    System.out.println("O adversário acertou "+(20-barcosJogador)+" dos seus barcos.");
+                    System.out.println("\nAtaque do Jogador:");
+
+                    //esse for é pra ter certeza que o jogador vai tentar acertar um lugar que ainda não foi tentado
+                    for (int i = 0 ; i == 0 ;){
+                        System.out.println("Faça o ataque:");
+                        int[] cordenadas = cordenadas();
+                        if(checarLivre(cordenadas[0], cordenadas[1], 'h', campoAtacarAdversario, 1)){//checa pra ver se o jogador já acertou esse lugar
+                            campoAtacarAdversario = ataque(cordenadas[0], cordenadas[1], campoAdversario, campoAtacarAdversario);
+                            if (acertou(cordenadas[0], cordenadas[1], campoAdversario)){
+                                barcosAdversarios--;
+                            }
+                            i++;
+                        }else{
+                            System.out.print("\nVocê já tentou acertar esse lugar! Tente outra posição.");
+                        }
+                    }
+
+                    if (barcosAdversarios == 0){
+                        ganhou = 1;
+                        break;
+                    }
+                    mostraTabuleiro(campoAtacarAdversario);
+                    System.out.println("♒ = água | 💣 = errou um barco | ⛵ = acertou um barco | "+barcosAdversarios+" = barcos restantes");
+
+
+
+                    System.out.println("\nAtaque da Máquina:");
+                    for (int i = 0 ; i == 0 ;){
+                        int linha= gerar.nextInt(0, 9);
+                        int coluna= gerar.nextInt(0, 9);
+                        if(checarLivre(linha, coluna, 'h', campoAtacarJogador, 1)){
+                            campoAtacarJogador =ataque(linha, coluna, campoJogador, campoAtacarJogador);
+                            if(acertou(linha, coluna, campoJogador)){
+                                barcosJogador--;
+                            }
+                            i++;
+                        }
+                    }
+                    if (barcosJogador == 0){
+                        ganhou = 2;
+                        break;
+                    }
+                    mostraTabuleiro(campoAtacarJogador);
+
+                }while(ganhou == 0);
+            }
+        }
+
+        if (ganhou == 1){
+            System.out.println("\n\nO Jogador foi o vencedor da rodada!");
         }else{
-            do {
-                System.out.println("\nJogador ataca:");
-                System.out.println("Campo Adversário:");
-                mostraTabuleiro(campoAtacarAdversario);
-                System.out.println("Faça o ataque:");
-                int barcosAdversarios = 20;
-                int linha = 0;
-                int coluna = 0;
-                for (int i = 0; i==0;) {
-                    System.out.print("\nLinha: ");
-                    linha = ler.nextInt();
-                    if (linha >=0 && linha<=9) { // tem que ajustar isso aqui para não acitar char, pq se eu coloco char da erro
-                        i++;
-                    } else {
-                        System.out.println("Opção inválida.");
-                    }
-                }
-                for (int i = 0; i==0;) {
-                    System.out.print("\nColuna: ");
-                    char charColuna = ler.next().toLowerCase().charAt(0);
-                    coluna = pegarNumero(charColuna);
-                    if (coluna >=0 && coluna<=9) {
-                        i++;
-                    } else {
-                        System.out.println("Opção inválida.");
-                    }
-                }
-                campoAtacarAdversario = ataque(linha, coluna, campoAdversario, campoAtacarAdversario);
-                mostraTabuleiro(campoAtacarAdversario);
-
-                if (barcosAdversarios == 0){
-                    ganhou = true;
-                }
-
-                System.out.println("\nAtaque da Máquina:");
-                autoAlocar(campoAdversario, tamanhos);
-                int barcosJogador = 20;
-                Random gerar= new Random();
-                linha= gerar.nextInt(0, 9);
-                coluna= gerar.nextInt(0, 9);
-                campoAtacarJogador =ataque(linha, coluna, campoJogador, campoAtacarJogador);
-                mostraTabuleiro(campoAtacarJogador);
-
-                if (barcosJogador == 0){
-                    ganhou = true;
-                }
-
-            }while(!ganhou);
+            System.out.println("\n\nO Adversário foi o vencedor da rodada!");
         }
 
     }
@@ -416,7 +448,5 @@ public class Main {
         }
         return acertou;
     }
-
-
 
 }
