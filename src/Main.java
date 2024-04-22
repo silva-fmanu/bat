@@ -187,7 +187,64 @@ public class Main {
                         if(checarLivre(cordenadas[0], cordenadas[1], 'h', campoAtacarAdversario, 1)){//checa pra ver se o jogador já acertou esse lugar
                             campoAtacarAdversario = ataque(cordenadas[0], cordenadas[1], campoAdversario, campoAtacarAdversario);
                             if (acertou(cordenadas[0], cordenadas[1], campoAdversario)){
+                                System.out.println("Acertou jogue de novo!");
                                 barcosAdversarios--;
+
+                            }
+                            i++;
+                        }else{
+                            System.out.print("\nVocê já tentou acertar esse lugar! Tente outra posição.");
+                        }
+                    }
+
+                    if (barcosAdversarios == 0){
+                        ganhou = 1;
+                        break;
+                    }
+                    mostraTabuleiro(campoAtacarAdversario);
+                    System.out.println("♒ = água | 💣 = errou um barco | ⛵ = acertou um barco | "+barcosAdversarios+" = barcos restantes");
+
+
+
+                    System.out.println("\nAtaque da Máquina:");
+                    for (int i = 0 ; i == 0 ;){
+                        int linha= gerar.nextInt(0, 9);
+                        int coluna= gerar.nextInt(0, 9);
+                        if(checarLivre(linha, coluna, 'h', campoAtacarJogador, 1)){
+                            campoAtacarJogador =ataque(linha, coluna, campoJogador, campoAtacarJogador);
+                            if(acertou(linha, coluna, campoJogador)){
+                                System.out.println("Acertou jogue de novo!");
+                                barcosJogador--;
+
+                            }
+                            i++;
+                        }
+                    }
+                    if (barcosJogador == 0){
+                        ganhou = 2;
+                        break;
+                    }
+                    mostraTabuleiro(campoAtacarJogador);
+
+                }while(ganhou == 0);
+            }
+            else{
+                do {
+                    System.out.println("\nCampo Adversário:");
+                    mostraTabuleiro(campoAtacarAdversario);
+                    System.out.println("♒ = água | 💣 = errou um barco | ⛵ = acertou um barco | "+barcosAdversarios+" = barcos restantes");
+                    System.out.println("O adversário acertou "+(20-barcosJogador)+" dos seus barcos.");
+                    System.out.println("\nAtaque do Jogador:");
+
+                    //esse for é pra ter certeza que o jogador vai tentar acertar um lugar que ainda não foi tentado
+                    for (int i = 0 ; i == 0 ;){
+                        System.out.println("Faça o ataque:");
+                        int[] cordenadas = cordenadas();
+                        if(checarLivre(cordenadas[0], cordenadas[1], 'h', campoAtacarAdversario, 1)){//checa pra ver se o jogador já acertou esse lugar
+                            campoAtacarAdversario = ataque(cordenadas[0], cordenadas[1], campoAdversario, campoAtacarAdversario);
+                            if (acertou(cordenadas[0], cordenadas[1], campoAdversario)){
+                                barcosAdversarios--;
+
                             }
                             i++;
                         }else{
@@ -212,6 +269,8 @@ public class Main {
                             campoAtacarJogador =ataque(linha, coluna, campoJogador, campoAtacarJogador);
                             if(acertou(linha, coluna, campoJogador)){
                                 barcosJogador--;
+                                tentarAcertar(linha, coluna);
+                                campoAtacarJogador =ataque(linha, coluna, campoJogador, campoAtacarJogador);
                             }
                             i++;
                         }
@@ -447,6 +506,34 @@ public class Main {
             acertou = true;
         }
         return acertou;
+    }
+
+    static void tentarAcertar(int linha, int coluna){
+        Random gerar= new Random();
+        int cont=0;
+        int escolha=gerar.nextInt(1,100);
+        if(escolha%2==0){//coluna
+            int lado= gerar.nextInt(1,100);
+            if(lado%2==0){
+                coluna++; //testa um pra direita
+                cont++;
+            }
+            else{
+                coluna--;
+            }
+        }
+        else{//linha
+            int lado= gerar.nextInt(1,100);
+            if(lado%2==0){
+                linha++; //testa um pra cima
+            }
+            else{
+                linha--;
+            }
+        }
+
+
+
     }
 
 }
