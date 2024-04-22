@@ -287,10 +287,10 @@ public class Main {
                     continuar na mesma direção, se errou, tem checar pra ver se na outra direção já tinha errado, senão, tentar acertar na outra direção
                      */
 
-                     for (int i = 0 ; i == 0 ;){//checar se acertou um lugar que não tinha antes
-c                        if(acerto){
+                    for (int i = 0 ; i == 0 ;){//checar se acertou um lugar que não tinha antes
+                        if(acerto){
                             mostraTabuleiro(campoAtacarJogador);
-oi                            if(xdireita || xesquerda){
+                            if(xdireita || xesquerda){
                                 if(coluna<9 && xdireita){
                                     coluna++;
                                     campoAtacarJogador =ataque(linha, coluna, campoJogador, campoAtacarJogador);
@@ -325,7 +325,7 @@ oi                            if(xdireita || xesquerda){
                                     xdireita=false;
                                     xesquerda = false;
                                 }
-ta                            }else if(ycima || ybaixo){
+                            }else if(ycima || ybaixo){
                                 if(linha<9 && ycima){
                                     linha++;
                                     campoAtacarJogador =ataque(linha, coluna, campoJogador, campoAtacarJogador);
@@ -360,7 +360,7 @@ ta                            }else if(ycima || ybaixo){
                                     ycima = false;
                                     ybaixo = false;
                                 }
-                            }else{do
+                            }else{
                                 acerto = false;
                             }
                         }else{
