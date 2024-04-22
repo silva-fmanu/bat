@@ -121,6 +121,9 @@ public class Main {
                         campoAtacarAdversario = ataque(cordenadas[0], cordenadas[1], campoAdversario, campoAtacarAdversario);
                         if (acertou(cordenadas[0], cordenadas[1], campoAdversario)){
                             barcosAdversarios--;
+                            System.out.println("Você acertou!");
+                            mostraTabuleiro(campoAtacarAdversario);
+                            i--;
                         }
                         i++;
                     }else{
@@ -151,6 +154,9 @@ public class Main {
                         campoAtacarJogador = ataque(cordenadas[0], cordenadas[1], campoJogador, campoAtacarJogador);
                         if (acertou(cordenadas[0], cordenadas[1], campoJogador)){
                             barcosJogador--;
+                            System.out.println("Você acertou!");
+                            mostraTabuleiro(campoAtacarAdversario);
+                            i--;
                         }
                         i++;
                     }else{
@@ -187,9 +193,10 @@ public class Main {
                         if(checarLivre(cordenadas[0], cordenadas[1], 'h', campoAtacarAdversario, 1)){//checa pra ver se o jogador já acertou esse lugar
                             campoAtacarAdversario = ataque(cordenadas[0], cordenadas[1], campoAdversario, campoAtacarAdversario);
                             if (acertou(cordenadas[0], cordenadas[1], campoAdversario)){
-                                System.out.println("Acertou jogue de novo!");
                                 barcosAdversarios--;
-
+                                System.out.println("Você acertou!");
+                                mostraTabuleiro(campoAtacarAdversario);
+                                i--;
                             }
                             i++;
                         }else{
@@ -215,7 +222,9 @@ public class Main {
                             if(acertou(linha, coluna, campoJogador)){
                                 System.out.println("Acertou jogue de novo!");
                                 barcosJogador--;
-
+                                System.out.println("Máquina Acertou!");
+                                mostraTabuleiro(campoAtacarAdversario);
+                                i--;
                             }
                             i++;
                         }
@@ -229,6 +238,13 @@ public class Main {
                 }while(ganhou == 0);
             }
             else{
+                boolean acerto = false;
+                int linha = 0;
+                int coluna = 0;
+                boolean xdireita = false;
+                boolean xesquerda = false;
+                boolean ycima = false;
+                boolean ybaixo = false;
                 do {
                     System.out.println("\nCampo Adversário:");
                     mostraTabuleiro(campoAtacarAdversario);
@@ -244,7 +260,9 @@ public class Main {
                             campoAtacarAdversario = ataque(cordenadas[0], cordenadas[1], campoAdversario, campoAtacarAdversario);
                             if (acertou(cordenadas[0], cordenadas[1], campoAdversario)){
                                 barcosAdversarios--;
-
+                                System.out.println("Você acertou!");
+                                mostraTabuleiro(campoAtacarAdversario);
+                                i--;
                             }
                             i++;
                         }else{
@@ -262,17 +280,106 @@ public class Main {
 
 
                     System.out.println("\nAtaque da Máquina:");
-                    for (int i = 0 ; i == 0 ;){
-                        int linha= gerar.nextInt(0, 9);
-                        int coluna= gerar.nextInt(0, 9);
-                        if(checarLivre(linha, coluna, 'h', campoAtacarJogador, 1)){
-                            campoAtacarJogador =ataque(linha, coluna, campoJogador, campoAtacarJogador);
-                            if(acertou(linha, coluna, campoJogador)){
-                                barcosJogador--;
-                                tentarAcertar(linha, coluna);
-                                campoAtacarJogador =ataque(linha, coluna, campoJogador, campoAtacarJogador);
+
+                    /*
+                    acertar um lugar aleatório, se for barco, acertar em algum outro lugar próximo, se errou, quantos erros. se já sabe que o barco
+                    é horizontal, não precisa testar na vertical. ver se ta dentro do campo do jogo checar as bordas do jogo. se acertou tem que
+                    continuar na mesma direção, se errou, tem checar pra ver se na outra direção já tinha errado, senão, tentar acertar na outra direção
+                     */
+
+                     for (int i = 0 ; i == 0 ;){//checar se acertou um lugar que não tinha antes
+c                        if(acerto){
+                            mostraTabuleiro(campoAtacarJogador);
+oi                            if(xdireita || xesquerda){
+                                if(coluna<9 && xdireita){
+                                    coluna++;
+                                    campoAtacarJogador =ataque(linha, coluna, campoJogador, campoAtacarJogador);
+                                    if (acertou(linha, coluna, campoAtacarJogador)){
+                                        barcosJogador--;
+                                        ycima = false;
+                                        ybaixo = false;
+                                    }else{
+                                        xdireita=false;
+                                        i++;
+                                    }
+                                }else if(coluna>1 && xesquerda){
+                                    coluna--;
+                                    boolean livreAcerto = false;
+                                    if (campoAtacarJogador[linha][coluna].equals("♒")){
+                                        livreAcerto = true;
+                                    }
+                                    campoAtacarJogador =ataque(linha, coluna, campoJogador, campoAtacarJogador);
+                                    if (acertou(linha, coluna, campoAtacarJogador)){
+                                        if (livreAcerto){
+                                            barcosJogador--;
+                                            ycima = false;
+                                            ybaixo = false;
+                                        }
+                                        xdireita = false;
+                                    }else{
+                                        xdireita=false;
+                                        xesquerda=false;
+                                        i++;
+                                    }
+                                }else{
+                                    xdireita=false;
+                                    xesquerda = false;
+                                }
+ta                            }else if(ycima || ybaixo){
+                                if(linha<9 && ycima){
+                                    linha++;
+                                    campoAtacarJogador =ataque(linha, coluna, campoJogador, campoAtacarJogador);
+                                    if (acertou(linha, coluna, campoAtacarJogador)){
+                                        barcosJogador--;
+                                        xdireita = false;
+                                        xesquerda = false;
+                                    }else{
+                                        i++;
+                                        ycima=false;
+                                    }
+                                }else if(linha>1 && ybaixo){
+                                    linha--;
+                                    boolean livreAcerto = false;
+                                    if (campoAtacarJogador[linha][(coluna-1)].equals("♒")){
+                                        livreAcerto = true;
+                                    }
+                                    campoAtacarJogador =ataque(linha, (coluna-1), campoJogador, campoAtacarJogador);
+                                    if (acertou(linha, (coluna-1), campoAtacarJogador)){
+                                        if (livreAcerto){
+                                            barcosJogador--;
+                                            xdireita = false;
+                                            xesquerda = false;
+                                        }
+                                        ycima = false;
+                                    }else{
+                                        i++;
+                                        ybaixo=false;
+                                        ycima = false;
+                                    }
+                                }else{
+                                    ycima = false;
+                                    ybaixo = false;
+                                }
+                            }else{do
+                                acerto = false;
                             }
-                            i++;
+                        }else{
+                            linha = gerar.nextInt(0, 9);
+                            coluna = gerar.nextInt(0, 9);
+                            if (checarLivre(linha, coluna, 'h', campoAtacarJogador, 1)) {
+                                campoAtacarJogador =ataque(linha, coluna, campoJogador, campoAtacarJogador);
+                                if (acertou(linha, coluna, campoJogador)) {
+                                    barcosJogador--;
+                                    acerto=true;
+                                    xdireita = true;
+                                    xesquerda = true;
+                                    ycima= true;
+                                    ybaixo = true;
+                                }else{
+                                    acerto=false;
+                                    i++;
+                                }
+                            }
                         }
                     }
                     if (barcosJogador == 0){
@@ -507,16 +614,14 @@ public class Main {
         }
         return acertou;
     }
-
-    static void tentarAcertar(int linha, int coluna){
+/*
+    static int[] tentarAcertar(int linha, int coluna){
         Random gerar= new Random();
-        int cont=0;
         int escolha=gerar.nextInt(1,100);
         if(escolha%2==0){//coluna
             int lado= gerar.nextInt(1,100);
             if(lado%2==0){
                 coluna++; //testa um pra direita
-                cont++;
             }
             else{
                 coluna--;
@@ -533,7 +638,10 @@ public class Main {
         }
 
 
-
-    }
+        int[] cordenadas = new int[2];
+        cordenadas[0] = linha;
+        cordenadas[1] = coluna;
+        return cordenadas;
+    }*/
 
 }
