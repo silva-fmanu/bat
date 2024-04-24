@@ -175,10 +175,10 @@ public class Main {
 
             }while(ganhou == 0);
         }
-        else{
+        else{ //jogador no modo solo, contra máquina
             Random gerar= new Random();
             autoAlocar(campoAdversario, tamanhos);
-            if (!dificil){
+            if (!dificil){ // jogador contra uma máquina não inteligente
                 do {
                     System.out.println("\nCampo Adversário:");
                     mostraTabuleiro(campoAtacarAdversario);
@@ -237,7 +237,7 @@ public class Main {
 
                 }while(ganhou == 0);
             }
-            else{
+            else{ // jogador contra uma máquina inteligente que tenta acertar mais
                 boolean acerto = false;
                 int linha = 0;
                 int coluna = 0;
@@ -287,74 +287,98 @@ public class Main {
                     continuar na mesma direção, se errou, tem checar pra ver se na outra direção já tinha errado, senão, tentar acertar na outra direção
                      */
 
+
+                    // inteligência da máquina, pra não acertar de modo 100% aleatório
                     for (int i = 0 ; i == 0 ;){//checar se acertou um lugar que não tinha antes
                         if(acerto){
-                            mostraTabuleiro(campoAtacarJogador);
                             if(xdireita || xesquerda){
-                                if(coluna<9 && xdireita){
+                                if(coluna<9 && xdireita && campoAtacarJogador[linha][(coluna+1)].equals("♒")){
                                     coluna++;
-                                    campoAtacarJogador =ataque(linha, coluna, campoJogador, campoAtacarJogador);
-                                    if (acertou(linha, coluna, campoAtacarJogador)){
-                                        barcosJogador--;
-                                        ycima = false;
-                                        ybaixo = false;
-                                    }else{
-                                        xdireita=false;
-                                        i++;
+                                    if (!campoAtacarJogador[linha][coluna].equals("💣")){
+                                        campoAtacarJogador =ataque(linha, coluna, campoJogador, campoAtacarJogador);
+                                        if (acertou(linha, coluna, campoAtacarJogador)){
+                                            barcosJogador--;
+                                            ycima = false;
+                                            ybaixo = false;
+                                        }else{
+                                            xdireita=false;
+                                            coluna--;
+                                            i++;
+                                        }
+                                    }else {
+                                        xdireita = false;
+                                        coluna--;
                                     }
-                                }else if(coluna>1 && xesquerda){
+                                }else if(coluna>0 && xesquerda){
                                     coluna--;
                                     boolean livreAcerto = false;
                                     if (campoAtacarJogador[linha][coluna].equals("♒")){
                                         livreAcerto = true;
                                     }
-                                    campoAtacarJogador =ataque(linha, coluna, campoJogador, campoAtacarJogador);
-                                    if (acertou(linha, coluna, campoAtacarJogador)){
-                                        if (livreAcerto){
-                                            barcosJogador--;
-                                            ycima = false;
-                                            ybaixo = false;
+                                    if (!campoAtacarJogador[linha][coluna].equals("💣")){
+                                        campoAtacarJogador = ataque(linha, coluna, campoJogador, campoAtacarJogador);
+                                        if (acertou(linha, coluna, campoAtacarJogador)){
+                                            if (livreAcerto){
+                                                barcosJogador--;
+                                                ycima = false;
+                                                ybaixo = false;
+                                            }
+                                            xdireita = false;
+                                        }else{
+                                            xesquerda=false;
+                                            coluna++;
+                                            i++;
                                         }
-                                        xdireita = false;
                                     }else{
-                                        xdireita=false;
-                                        xesquerda=false;
-                                        i++;
+                                        xesquerda = false;
+                                        coluna++;
                                     }
                                 }else{
                                     xdireita=false;
                                     xesquerda = false;
                                 }
                             }else if(ycima || ybaixo){
-                                if(linha<9 && ycima){
-                                    linha++;
-                                    campoAtacarJogador =ataque(linha, coluna, campoJogador, campoAtacarJogador);
-                                    if (acertou(linha, coluna, campoAtacarJogador)){
-                                        barcosJogador--;
-                                        xdireita = false;
-                                        xesquerda = false;
-                                    }else{
-                                        i++;
-                                        ycima=false;
-                                    }
-                                }else if(linha>1 && ybaixo){
+                                if(linha>0 && ycima){
                                     linha--;
+                                    if (campoAtacarJogador[linha][coluna].equals("♒")){
+                                        if (!campoAtacarJogador[linha][coluna].equals("💣")){
+                                            campoAtacarJogador = ataque(linha, coluna, campoJogador, campoAtacarJogador);
+                                            if (acertou(linha, coluna, campoAtacarJogador)){
+                                                barcosJogador--;
+                                                xdireita = false;
+                                                xesquerda = false;
+                                            }else{
+                                                i++;
+                                                ycima=false;
+                                            }
+                                        }else{
+                                            ycima = false;
+                                        }
+                                    }else{
+                                        ycima= false;
+                                    }
+                                }else if(linha<9 && ybaixo){
+                                    linha++;
                                     boolean livreAcerto = false;
-                                    if (campoAtacarJogador[linha][(coluna-1)].equals("♒")){
+                                    if (campoAtacarJogador[linha][coluna].equals("♒")){
                                         livreAcerto = true;
                                     }
-                                    campoAtacarJogador =ataque(linha, (coluna-1), campoJogador, campoAtacarJogador);
-                                    if (acertou(linha, (coluna-1), campoAtacarJogador)){
-                                        if (livreAcerto){
-                                            barcosJogador--;
-                                            xdireita = false;
-                                            xesquerda = false;
+                                    if (!campoAtacarJogador[linha][coluna].equals("💣")){
+                                        campoAtacarJogador = ataque(linha, coluna, campoJogador, campoAtacarJogador);
+                                        if (acertou(linha, coluna, campoAtacarJogador)){
+                                            if (livreAcerto){
+                                                barcosJogador--;
+                                                xdireita = false;
+                                                xesquerda = false;
+                                            }
+                                            ycima = false;
+                                        }else{
+                                            i++;
+                                            ybaixo=false;
+                                            ycima = false;
                                         }
-                                        ycima = false;
                                     }else{
-                                        i++;
-                                        ybaixo=false;
-                                        ycima = false;
+                                        ybaixo = false;
                                     }
                                 }else{
                                     ycima = false;
@@ -391,11 +415,14 @@ public class Main {
                 }while(ganhou == 0);
             }
         }
-
+        System.out.println("\nCampo do Jogador:");
+        mostraTabuleiro(campoAtacarJogador);
+        System.out.println("\nCampo do Adversário:");
+        mostraTabuleiro(campoAtacarAdversario);
         if (ganhou == 1){
-            System.out.println("\n\nO Jogador foi o vencedor da rodada!");
+            System.out.println("\nO Jogador foi o vencedor da rodada!");
         }else{
-            System.out.println("\n\nO Adversário foi o vencedor da rodada!");
+            System.out.println("\nO Adversário foi o vencedor da rodada!");
         }
 
     }
